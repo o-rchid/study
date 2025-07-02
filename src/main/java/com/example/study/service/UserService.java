@@ -30,6 +30,8 @@ public class UserService {
                 var cookie = new Cookie("authorization-cookie", userDto.getId());
                 cookie.setDomain("localhost");
                 cookie.setPath("/");
+                cookie.setHttpOnly(true);
+                // cookie.setSecure(true); - https 에서만 사용되도록 설정
                 cookie.setMaxAge(-1);
 
                 httpServletResponse.addCookie(cookie);
