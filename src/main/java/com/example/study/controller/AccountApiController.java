@@ -2,6 +2,7 @@ package com.example.study.controller;
 
 import com.example.study.service.UserService;
 import com.example.study.model.LoginRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,8 +21,8 @@ public class AccountApiController {
     public void login(
             @RequestBody
             LoginRequest loginRequest,
-            HttpSession httpSession
+            HttpServletResponse httpServletResponse
     ) {
-        userService.login(loginRequest, httpSession);
+        userService.login(loginRequest, httpServletResponse);
     }
 }

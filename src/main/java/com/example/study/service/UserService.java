@@ -2,6 +2,8 @@ package com.example.study.service;
 
 import com.example.study.db.UserRepository;
 import com.example.study.model.LoginRequest;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,7 +15,7 @@ public class UserService {
     private UserRepository userRepository;
     public void login(
             LoginRequest loginRequest,
-            HttpSession httpSession
+            HttpServletResponse httpServletResponse
     ) {
         var id = loginRequest.getId();
         var pw = loginRequest.getPassword();
@@ -24,7 +26,13 @@ public class UserService {
             var userDto = optionalUser.get();
 
             if (userDto.getPassword().equals(pw)) {
-                httpSession.setAttribute("USER", userDto);
+                // cookie에 해당 정보를저장
+                var cookie = new Cookie("authorization-cookie", userDto.getId());
+                cookie.setDomain("localhost");
+                cookie.setPath("/");
+                cookie.setMaxAge(-1);
+
+                httpServletResponse.addCookie(cookie);
             } else {
                 throw new RuntimeException("Password Not Match");
             }
