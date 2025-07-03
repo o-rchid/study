@@ -13,7 +13,7 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
-    public void login(
+    public String login(
             LoginRequest loginRequest,
             HttpServletResponse httpServletResponse
     ) {
@@ -23,23 +23,15 @@ public class UserService {
         var optionalUser = userRepository.findByName(id);
 
         if (optionalUser.isPresent()) {
+
             var userDto = optionalUser.get();
 
-            if (userDto.getPassword().equals(pw)) {
-                // cookie에 해당 정보를저장
-                var cookie = new Cookie("authorization-cookie", userDto.getId());
-                cookie.setDomain("localhost");
-                cookie.setPath("/");
-                cookie.setHttpOnly(true);
-                // cookie.setSecure(true); - https 에서만 사용되도록 설정
-                cookie.setMaxAge(-1);
+            if (userDto.getPassword().equals(pw))
+                return userDto.getId();
 
-                httpServletResponse.addCookie(cookie);
-            } else {
-                throw new RuntimeException("Password Not Match");
-            }
         } else {
             throw new RuntimeException("User Not Found");
         }
+        return null;
     }
 }
