@@ -1,13 +1,39 @@
 package com.example.study;
 
+import com.example.study.service.JwtService;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Objects;
 
 @SpringBootTest
 class StudyApplicationTests {
+
+    @Autowired
+    private JwtService jwtService;
 
     @Test
     void contextLoads() {
     }
 
+    @Test
+    void tokenCreate() {
+        var claims = new HashMap<String, Object>();
+        claims.put("user_id", 923);
+
+        var expiredAt = LocalDateTime.now().plusMinutes(10);
+
+        var jwtToken = jwtService.create(claims, expiredAt);
+
+        System.out.println(jwtToken);
+    }
+
+    @Test
+    void tokenValidation() {
+        var token = "eyJhbGciiJIUzI1NiJ9.eyJ1c2VyX2lkIjo5MjMsImV4cCI6MTc1MTU0NTQzMH0.xbb0X0rx6BufUfQBj5fi01ALk93HsfXWfj_DcpnLz_4";
+        jwtService.validation(token);
+    }
 }
